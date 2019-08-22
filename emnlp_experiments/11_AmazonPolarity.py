@@ -260,7 +260,7 @@ with open(project_path + '/user_study_c_texts_with_scores.csv', mode='w') as csv
 # # - Dump explanations to a file
 
 # # CNN Model full time training
-with open(project_path + '/user_study_c_explanations_full.csv', mode='a') as csv_file:
+with open(project_path + '/user_study_c_explanations_full.csv', mode='w') as csv_file:
     writer = csv.writer(csv_file, lineterminator="\n")
     writer.writerow(['example_id', 'explain_method', 'ngrams_support', 'ngrams_oppose'])
     for alist in [tpp, tnn, fpp, fnn]:
