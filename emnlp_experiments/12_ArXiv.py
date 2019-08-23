@@ -24,6 +24,8 @@ model_name_specific = 'ArXiv_specific'
 # - ArXiv datasets
 target_names = ['cs', 'math', 'phys']
 METHODS = ['random_words', 'random_ngrams', 'lime', 'lrp_words', 'lrp_ngrams', 'deeplift_words', 'deeplift_ngrams','decision_trees', 'grad_cam']
+# METHODS = ['random_words', 'random_ngrams', 'lime', 'decision_trees', 'grad_cam']
+
 folder_path = "../data/arxiv/"
 
 text_train_general = pickle.load(open(folder_path + "text_train_general.pickle", "rb"))
@@ -59,7 +61,7 @@ cnn_model.train(project_path, model_name_general, X_train_general, y_train_gener
 
 cnn_model_rush = CNNModel(vocab_size, word_index, word2index, emb_dim, emb_matrix, False, max_len, target_names,                      filters = [(2, 50), (3, 50), (4, 50)],                      filter_activations = 'relu',                      dense = [150, len(target_names)],                      dense_activations = ['relu', 'softmax'])
 
-cnn_model_rush.setup_for_analysis(project_path, model_name_specific, X_train_specific, y_train_specific_onehot, X_validate_specific, y_validate_specific_onehot, batch_size = 2048)
+cnn_model_rush.train(project_path, model_name_specific, X_train_specific, y_train_specific_onehot, X_validate_specific, y_validate_specific_onehot, batch_size = 2048)
 
 
 # ## Evaluating both models
@@ -146,9 +148,9 @@ with open(project_path + '/user_study_a_explanations_specific.csv', mode='w') as
     writer.writerow(['example_id', 'explain_method', 'ngrams'])
     for alist in [CORRECT, INCORRECT]:
         for idx, example_id in enumerate(tqdm(alist)):
-            print(idx '; Example_id', example_id)
+            print(idx, '; Example_id', example_id)
             for method in METHODS:
-                ans = explain_example(cnn_model, text_test[example_id], method, exp_type = ['+'])
+                ans = explain_example(cnn_model, text_test_general[example_id], method, exp_type = ['+'])
                 exps = [list(t[1]) for t in ans['explanations']['+']] + [list([]) for i in range(5-len(ans['explanations']['+']))]
                 exps = [[int(idx) for idx in ng] for ng in exps]
                 writer.writerow([example_id, method, json.dumps(exps)])
@@ -162,7 +164,7 @@ with open(project_path + '/user_study_a_explanations_specific.csv', mode='w') as
     for alist in [CORRECT, INCORRECT]:
         for example_id in tqdm(alist):
             for method in METHODS:
-                ans = explain_example(cnn_model_rush, text_test[example_id], method, exp_type = ['+'])
+                ans = explain_example(cnn_model_rush, text_test_general[example_id], method, exp_type = ['+'])
                 exps = [list(t[1]) for t in ans['explanations']['+']] + [list([]) for i in range(5-len(ans['explanations']['+']))]
                 exps = [[int(idx) for idx in ng] for ng in exps]
                 writer.writerow([example_id, method, json.dumps(exps)])
@@ -208,14 +210,15 @@ with open(project_path + '/user_study_b_explanations_full.csv', mode='w') as csv
     writer.writerow(['example_id', 'explain_method', 'ngrams'])
     for alist in [CORRECT, INCORRECT]:
         for example_id in tqdm(alist):
+            input_text = text_test_general[example_id]
             tokenized_text = [str(w) for w in list(utils.tokenizer(input_text)) if str(w) != '']
-			for method in METHODS:
-	            ans = explain_example(cnn_model, text_test[example_id], method, exp_type = ['+'])
-	            exps = [positions2text(tokenized_text , t[1]) for t in ans['explanations']['+']] + ['' for i in range(5-len(ans['explanations']['+']))]
-	            writer.writerow([example_id, method, json.dumps(exps)])
-	            utils.__log__(method)
-	        print("-----------------------------------")
-	        
+            for method in METHODS:
+                ans = explain_example(cnn_model, text_test_general[example_id], method, exp_type = ['+'])
+                exps = [positions2text(tokenized_text , t[1]) for t in ans['explanations']['+']] + ['' for i in range(5-len(ans['explanations']['+']))]
+                writer.writerow([example_id, method, json.dumps(exps)])
+                utils.__log__(method)
+            print("-----------------------------------")
+
 # ## User Study C: Providing Information for Decision Making
 
 # - Using only the good CNN, select 100 test texts for testing
@@ -244,9 +247,9 @@ with open(project_path + '/user_study_c_texts_with_scores.csv', mode='w') as csv
     writer.writerow(['example_id', 'text', 'actual_class', 'predicted_class', 'scores'])
     for alist in [CORRECT, INCORRECT]:
         for example_id in alist:
-	        scores = list(prediction_test_onehot[example_id])
-	        scores = [round(float(s), 3) for s in scores]
-	        writer.writerow([example_id, text_test_general[example_id], y_test_general[example_id], prediction_test[example_id], json.dumps(scores)])
+            scores = list(prediction_test_onehot[example_id])
+            scores = [round(float(s), 3) for s in scores]
+            writer.writerow([example_id, text_test_general[example_id], y_test_general[example_id], prediction_test[example_id], json.dumps(scores)])
 
 
 
@@ -258,12 +261,13 @@ with open(project_path + '/user_study_c_explanations_full.csv', mode='w') as csv
     writer.writerow(['example_id', 'explain_method', 'ngrams_support', 'ngrams_oppose'])
     for alist in [CORRECT, INCORRECT]:
         for example_id in alist:
-	        tokenized_text = [str(w) for w in list(utils.tokenizer(input_text)) if str(w) != '']
-			for method in METHODS:
-	            ans = explain_example(cnn_model, text_test_general[example_id], method, exp_type = ['+', '-'])
-	            exps_support = [positions2text(tokenized_text , t[1]) for t in ans['explanations']['+']] + ['' for i in range(5-len(ans['explanations']['+']))]
-	            exps_oppose = [positions2text(tokenized_text , t[1]) for t in ans['explanations']['-']] + ['' for i in range(5-len(ans['explanations']['-']))]
-	            writer.writerow([example_id, method, json.dumps(exps_support), json.dumps(exps_oppose)])
-	            utils.__log__(method)
-	        print("-----------------------------------")
+            input_text = text_test_general[example_id]
+            tokenized_text = [str(w) for w in list(utils.tokenizer(input_text)) if str(w) != '']
+            for method in METHODS:
+                ans = explain_example(cnn_model, text_test_general[example_id], method, exp_type = ['+', '-'])
+                exps_support = [positions2text(tokenized_text , t[1]) for t in ans['explanations']['+']] + ['' for i in range(5-len(ans['explanations']['+']))]
+                exps_oppose = [positions2text(tokenized_text , t[1]) for t in ans['explanations']['-']] + ['' for i in range(5-len(ans['explanations']['-']))]
+                writer.writerow([example_id, method, json.dumps(exps_support), json.dumps(exps_oppose)])
+                utils.__log__(method)
+            print("-----------------------------------")
 
