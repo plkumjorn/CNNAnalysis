@@ -1,4 +1,5 @@
 venv/
 keras-vis/
 results/
+data/
 */.ipynb_checkpoints
