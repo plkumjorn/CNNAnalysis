@@ -25,6 +25,7 @@ model_name_rush = 'Amazon_rush'
 
 folder_path = "../data/amazonreviews/"
 METHODS = ['random_words', 'random_ngrams', 'lime', 'lrp_words', 'lrp_ngrams', 'deeplift_words', 'deeplift_ngrams','decision_trees', 'grad_cam']
+# METHODS = ['random_words', 'random_ngrams', 'lime', 'decision_trees', 'grad_cam']
 
 y_train = pickle.load(open(folder_path + "y_train_100000.pickle", "rb"))
 y_validate = pickle.load(open(folder_path + "y_validate_50000.pickle", "rb"))
@@ -36,9 +37,9 @@ text_test = pickle.load(open(folder_path + "text_test_100000.pickle", "rb"))
 
 target_names = ['negative', 'positive']
 
-X_train = get_data_matrix(text_train, word2index, maxlen)
-X_validate = get_data_matrix(text_validate, word2index, maxlen)
-X_test = get_data_matrix(text_test, word2index, maxlen)
+X_train = get_data_matrix(text_train, word2index, max_len)
+X_validate = get_data_matrix(text_validate, word2index, max_len)
+X_test = get_data_matrix(text_test, word2index, max_len)
 
 y_train_onehot, y_validate_onehot, y_test_onehot = to_categorical(y_train), to_categorical(y_validate), to_categorical(y_test) 
 understand_data(target_names, y_train, y_test, y_validate)
@@ -95,7 +96,7 @@ print("Tree stats:")
 for idx, t in enumerate(tqdm(cnn_model_rush.pruned_tree_list)):
     n, d, l = tree_stats(t.tree_, 0)
     print("{}: Node {}, Depth {}, Leaves {}".format(target_names[idx], n, d, l))
-pickle.dump(cnn_model_rush.pruned_tree_list, open(project_path + '/' + rush + '_pruned_tree_list.pickle', 'wb'))
+pickle.dump(cnn_model_rush.pruned_tree_list, open(project_path + '/' + model_name_rush + '_pruned_tree_list.pickle', 'wb'))
 draw_tree_list(cnn_model_rush.pruned_tree_list, cnn_model_rush, folder = project_path)
 
 
@@ -123,7 +124,7 @@ print([len(aset) for aset in [TP, TN, FP, FN]])
 TP, TN, FP, FN = list(TP)[:25], list(TN)[:25], list(FP)[:25], list(FN)[:25]
 
 
-# - Write tokenized texts into a file
+# # - Write tokenized texts into a file
 
 with open(project_path + '/user_study_a_tokenizedtexts.csv', mode='w') as csv_file:
     writer = csv.writer(csv_file, lineterminator="\n")
@@ -135,15 +136,15 @@ with open(project_path + '/user_study_a_tokenizedtexts.csv', mode='w') as csv_fi
             writer.writerow([example_id, text_test[example_id], json.dumps(tokenized_text), y_test[example_id], prediction_test[example_id]])
 
 
-# - Dump explanations to a file
+# # - Dump explanations to a file
 
-# CNN Model full time training
+# # CNN Model full time training
 with open(project_path + '/user_study_a_explanations_full.csv', mode='w') as csv_file:
     writer = csv.writer(csv_file, lineterminator="\n")
     writer.writerow(['example_id', 'explain_method', 'ngrams'])
-    for alist in to_use:
+    for alist in [TP, TN, FP, FN]:
         for idx, example_id in enumerate(tqdm(alist)):
-            print(idx '; Example_id', example_id)
+            print(idx, '; Example_id', example_id)
             for method in METHODS:
                 ans = explain_example(cnn_model, text_test[example_id], method, exp_type = ['+'])
                 exps = [list(t[1]) for t in ans['explanations']['+']] + [list([]) for i in range(5-len(ans['explanations']['+']))]
@@ -155,11 +156,11 @@ with open(project_path + '/user_study_a_explanations_full.csv', mode='w') as csv
 # In[31]:
 
 
-# CNN Model rush time training
+# # CNN Model rush time training
 with open(project_path + '/user_study_a_explanations_rush.csv', mode='w') as csv_file:
     writer = csv.writer(csv_file, lineterminator="\n")
     writer.writerow(['example_id', 'explain_method', 'ngrams'])
-    for alist in to_use:
+    for alist in [TP, TN, FP, FN]:
         for example_id in tqdm(alist):
             for method in METHODS:
                 ans = explain_example(cnn_model_rush, text_test[example_id], method, exp_type = ['+'])
@@ -212,14 +213,15 @@ with open(project_path + '/user_study_b_explanations_full.csv', mode='w') as csv
     writer = csv.writer(csv_file, lineterminator="\n")
     writer.writerow(['example_id', 'explain_method', 'ngrams'])
     for alist in [tp, tn, fp, fn]:
-	    for idx, example_id in enumerate(tqdm(alist)):
-	        tokenized_text = [str(w) for w in list(utils.tokenizer(input_text)) if str(w) != '']
-			for method in METHODS:
-	            ans = explain_example(cnn_model, text_test[example_id], method, exp_type = ['+'])
-	            exps = [positions2text(tokenized_text , t[1]) for t in ans['explanations']['+']] + ['' for i in range(5-len(ans['explanations']['+']))]
-	            writer.writerow([example_id, method, json.dumps(exps)])
-	            utils.__log__(method)
-	        print("-----------------------------------")
+        for idx, example_id in enumerate(tqdm(alist)):
+            input_text = text_test[example_id]
+            tokenized_text = [str(w) for w in list(utils.tokenizer(input_text)) if str(w) != '']
+            for method in METHODS:
+                ans = explain_example(cnn_model, text_test[example_id], method, exp_type = ['+'])
+                exps = [positions2text(tokenized_text , t[1]) for t in ans['explanations']['+']] + ['' for i in range(5-len(ans['explanations']['+']))]
+                writer.writerow([example_id, method, json.dumps(exps)])
+                utils.__log__(method)
+            print("-----------------------------------")
 
 # # ## User Study C: Providing Information for Decision Making
 
@@ -253,9 +255,9 @@ with open(project_path + '/user_study_c_texts_with_scores.csv', mode='w') as csv
     writer.writerow(['example_id', 'text', 'actual_class', 'predicted_class', 'scores'])
     for alist in [tpp, tnn, fpp, fnn]:
         for example_id in alist:
-	        scores = list(prediction_test_onehot[example_id])
-	        scores = [round(float(s), 3) for s in scores]
-	        writer.writerow([example_id, text_test[example_id], y_test[example_id], prediction_test[example_id], json.dumps(scores)])
+            scores = list(prediction_test_onehot[example_id])
+            scores = [round(float(s), 3) for s in scores]
+            writer.writerow([example_id, text_test[example_id], y_test[example_id], prediction_test[example_id], json.dumps(scores)])
 
 # # - Dump explanations to a file
 
@@ -264,13 +266,14 @@ with open(project_path + '/user_study_c_explanations_full.csv', mode='w') as csv
     writer = csv.writer(csv_file, lineterminator="\n")
     writer.writerow(['example_id', 'explain_method', 'ngrams_support', 'ngrams_oppose'])
     for alist in [tpp, tnn, fpp, fnn]:
-	    for idx, example_id in enumerate(tqdm(alist)):
-	        print(idx, '; Example_id', example_id)
-	        tokenized_text = [str(w) for w in list(utils.tokenizer(input_text)) if str(w) != '']
-			for method in METHODS:
-	            ans = explain_example(cnn_model, text_test[example_id], method, exp_type = ['+', '-'])
-	            exps_support = [positions2text(tokenized_text , t[1]) for t in ans['explanations']['+']] + ['' for i in range(5-len(ans['explanations']['+']))]
-	            exps_oppose = [positions2text(tokenized_text , t[1]) for t in ans['explanations']['-']] + ['' for i in range(5-len(ans['explanations']['-']))]
-	            writer.writerow([example_id, method, json.dumps(exps_support), json.dumps(exps_oppose)])
-	            utils.__log__(method)
-	        print("-----------------------------------")
+        for idx, example_id in enumerate(tqdm(alist)):
+            print(idx, '; Example_id', example_id)
+            input_text = text_test[example_id]
+            tokenized_text = [str(w) for w in list(utils.tokenizer(input_text)) if str(w) != '']
+            for method in METHODS:
+                ans = explain_example(cnn_model, text_test[example_id], method, exp_type = ['+', '-'])
+                exps_support = [positions2text(tokenized_text , t[1]) for t in ans['explanations']['+']] + ['' for i in range(5-len(ans['explanations']['+']))]
+                exps_oppose = [positions2text(tokenized_text , t[1]) for t in ans['explanations']['-']] + ['' for i in range(5-len(ans['explanations']['-']))]
+                writer.writerow([example_id, method, json.dumps(exps_support), json.dumps(exps_oppose)])
+                utils.__log__(method)
+            print("-----------------------------------")
