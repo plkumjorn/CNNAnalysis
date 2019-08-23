@@ -66,3 +66,5 @@ for method in ['lime', 'lrp_words', 'lrp_ngrams', 'decision_trees', 'grad_cam']:
     	print(f"\t{tup[0]}")
     utils.__log__(method)
     
+# 4) Draw decision trees
+draw_tree_list(cnn_model.pruned_tree_list, cnn_model, folder = project_path)
