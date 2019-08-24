@@ -46,7 +46,7 @@ This repository contains codes used for training 1D convolutional neural network
 
 			source venv/Scripts/activate
 - If you want to create your own 1D CNN model and run explanation methods, please see a notebook `examples/4Newsgroup.ipynb` as an example.<br/>
-<img src="examples/example_analysis.png" alt="drawing" width="500" height="450"/>
+<img src="examples/example_analysis.PNG" alt="drawing" width="500" height="450"/>
 
 - If you want to rerun the experiments in our paper, generating explanation results for two datasets (Amazon and ArXiv), please see the two scripts in the `emnlp_experiments` folder. To download the data, follow step 5 above.
 - Do not forget to deactivate the virtual environment after use.
@@ -58,7 +58,6 @@ In the paper, we use two English textual datasets.
 
 - [**Amazon** review polarity](http://goo.gl/JyCnZq) by [Zhang et al, 2015](https://papers.nips.cc/paper/5782-character-level-convolutional-networks-for-text-classification.pdf).
 - **ArXiv** abstracts which we collected and created by ourselves using [ArXiv API](https://arxiv.org/help/api). It consists of three main categories: Computer Science (CS), Mathematics (MA), and Physics (PH). Due to the structure of classes, this dataset can be used in many classification settings, e.g., multi-class, multi-label, fine-grained, and coarse-grained classification. In the paper, we use this dataset for single-label coarse-grained (3-way) classification. 
-#### Data format
 	- [arxiv-clean-formatted-1375204.pickle](https://www.mediafire.com/file/d9l64jdvpp748ia/arxiv-clean-formatted-1375204.pickle/file) stores a list of 1,375,204 ArXiv items each of which has the following format. During preprocessing, we removed all citation commands `\cite{}` and replaced all math equations in titles and abstracts by `<MATH>`.
 
 		```
