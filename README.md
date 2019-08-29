@@ -87,7 +87,7 @@ In the paper, we use two English textual datasets.
 **Venue**: [2019 Conference on Empirical Methods in Natural Language Processing and 9th International Joint Conference on Natural Language Processing (EMNLP-IJCNLP 2019)](https://www.emnlp-ijcnlp2019.org/)
 
 
-**Abstract**: Due to the black-box nature of deep learning models, methods for explaining the models' results are crucial to gain trust from humans and support collaboration between AIs and humans. In this paper, we consider several model-agnostic and model-specific explanation methods for CNNs for text classification and conduct three human-grounded evaluations, focusing  on different purposes of explanations: _(1)_ revealing model behavior, _(2)_ justifying model predictions, and _(3)_ helping humans investigate uncertain predictions. The results highlight dissimilar qualities of the various explanation methods we consider and point the research community towards the most suitable method for each purpose.
+**Abstract**: Due to the black-box nature of deep learning models, methods for explaining the models' results are crucial to gain trust from humans and support collaboration between AIs and humans. In this paper, we consider several model-agnostic and model-specific explanation methods for CNNs for text classification and conduct three human-grounded evaluations, focusing on different purposes of explanations: (1) revealing model behavior, (2) justifying model predictions, and (3) helping humans investigate uncertain predictions. The results highlight dissimilar qualities of the various explanation methods we consider and show the degree to which these methods could serve for each purpose.
 
 **Please cite**: Coming soon !
 
