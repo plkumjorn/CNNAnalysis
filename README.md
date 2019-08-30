@@ -93,12 +93,12 @@ In the paper, we use two English textual datasets.
 
 **Please cite**: 
 	
-		@article{plkumjorn2019evaluations,
-			title={Human-grounded Evaluations of Explanation Methods for Text Classification},
-			author={Lertvittayakumjorn, Piyawat and Toni, Francesca},
-			journal={arXiv preprint arXiv:1908.11355},
-			year={2019}
-		}
+	@article{plkumjorn2019evaluations,
+		title={Human-grounded Evaluations of Explanation Methods for Text Classification},
+		author={Lertvittayakumjorn, Piyawat and Toni, Francesca},
+		journal={arXiv preprint arXiv:1908.11355},
+		year={2019}
+	}
 
 <!--
 ### Installation
