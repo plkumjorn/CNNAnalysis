@@ -1,7 +1,7 @@
 # Human-grounded Evaluations of Explanation Methods for Text Classification. EMNLP-IJCNLP 2019
 **Authors**: [Piyawat Lertvittayakumjorn](https://www.doc.ic.ac.uk/~pl1515/) and [Francesca Toni](https://www.doc.ic.ac.uk/~ft/) (Department of Computing, Imperial College London)
 
-**Paper link**: [https://arxiv.org/abs/1908.11355](https://arxiv.org/abs/1908.11355)
+**Paper links**: [ACL Anthology](https://www.aclweb.org/anthology/D19-1523/), [ArXiv](https://arxiv.org/abs/1908.11355)
 
 **Contact**: Piyawat Lertvittayakumjorn (pl1515 [at] imperial [dot] ac [dot] uk)
 
@@ -89,16 +89,23 @@ In the paper, we use two English textual datasets.
 
 **Abstract**: Due to the black-box nature of deep learning models, methods for explaining the models' results are crucial to gain trust from humans and support collaboration between AIs and humans. In this paper, we consider several model-agnostic and model-specific explanation methods for CNNs for text classification and conduct three human-grounded evaluations, focusing on different purposes of explanations: (1) revealing model behavior, (2) justifying model predictions, and (3) helping humans investigate uncertain predictions. The results highlight dissimilar qualities of the various explanation methods we consider and show the degree to which these methods could serve for each purpose.
 
-**Paper link**: [https://arxiv.org/abs/1908.11355](https://arxiv.org/abs/1908.11355)
+**Paper links**: [ACL Anthology](https://www.aclweb.org/anthology/D19-1523/), [ArXiv](https://arxiv.org/abs/1908.11355)
 
 **Please cite**: 
 	
-	@article{plkumjorn2019evaluations,
-		title={Human-grounded Evaluations of Explanation Methods for Text Classification},
-		author={Lertvittayakumjorn, Piyawat and Toni, Francesca},
-		journal={arXiv preprint arXiv:1908.11355},
-		year={2019}
-	}
+		@inproceedings{plkumjorn2019evaluations,
+			title = "Human-grounded Evaluations of Explanation Methods for Text Classification",
+			author = "Lertvittayakumjorn, Piyawat  and
+			  Toni, Francesca",
+			booktitle = "Proceedings of the 2019 Conference on Empirical Methods in Natural Language Processing and the 9th International Joint Conference on Natural Language Processing (EMNLP-IJCNLP)",
+			month = nov,
+			year = "2019",
+			address = "Hong Kong, China",
+			publisher = "Association for Computational Linguistics",
+			url = "https://www.aclweb.org/anthology/D19-1523",
+			doi = "10.18653/v1/D19-1523",
+			pages = "5198--5208",
+		}
 
 <!--
 ### Installation
