@@ -93,19 +93,19 @@ In the paper, we use two English textual datasets.
 
 **Please cite**: 
 	
-		@inproceedings{plkumjorn2019evaluations,
-			title = "Human-grounded Evaluations of Explanation Methods for Text Classification",
-			author = "Lertvittayakumjorn, Piyawat  and
-			  Toni, Francesca",
-			booktitle = "Proceedings of the 2019 Conference on Empirical Methods in Natural Language Processing and the 9th International Joint Conference on Natural Language Processing (EMNLP-IJCNLP)",
-			month = nov,
-			year = "2019",
-			address = "Hong Kong, China",
-			publisher = "Association for Computational Linguistics",
-			url = "https://www.aclweb.org/anthology/D19-1523",
-			doi = "10.18653/v1/D19-1523",
-			pages = "5198--5208",
-		}
+	@inproceedings{plkumjorn2019evaluations,
+		title = "Human-grounded Evaluations of Explanation Methods for Text Classification",
+		author = "Lertvittayakumjorn, Piyawat  and
+		  Toni, Francesca",
+		booktitle = "Proceedings of the 2019 Conference on Empirical Methods in Natural Language Processing and the 9th International Joint Conference on Natural Language Processing (EMNLP-IJCNLP)",
+		month = nov,
+		year = "2019",
+		address = "Hong Kong, China",
+		publisher = "Association for Computational Linguistics",
+		url = "https://www.aclweb.org/anthology/D19-1523",
+		doi = "10.18653/v1/D19-1523",
+		pages = "5198--5208",
+	}
 
 <!--
 ### Installation
